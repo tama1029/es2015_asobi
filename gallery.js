@@ -20,20 +20,22 @@ class BoxList {
             posi_x = this._item_width * no + this._margin * (no + 1);
             posi_y = this._margin;
             this._height[this._count] = height + this._margin;
-        } else {
-            for (let i = 0; i < this._column; i++) {
-                if (i == 0 || num > this._height[i]) {
-                    no = i;
-                    num = this._height[i];
-                }
-            }
-            posi_x = this._item_width * no + this._margin * (no + 1);
-            posi_y = this._height[no] + this._margin;
-            this._height[no] = this._height[no] + height + this._margin;
+            this._count++;
+            return [posi_x, posi_y];
+
         }
+
+        for (let i = 0; i < this._column; i++) {
+            if (i == 0 || num > this._height[i]) {
+                no = i;
+                num = this._height[i];
+            }
+        }
+        posi_x = this._item_width * no + this._margin * (no + 1);
+        posi_y = this._height[no] + this._margin;
+        this._height[no] = this._height[no] + height + this._margin;
         this._count++;
-        let posi = [posi_x, posi_y];
-        return posi;
+        return [posi_x, posi_y];
     }
 }
 
