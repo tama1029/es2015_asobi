@@ -2,8 +2,7 @@ class BoxList {
     constructor(margin) {
         this._margin = margin;
     }
-    init(width, item_width, column) {
-        this._width = width;
+    init(item_width, column) {
         this._item_width = item_width;
         this._column = column;
         this._height = new Array();
@@ -39,28 +38,30 @@ class BoxList {
     }
 }
 
-$(function(){
-    var iw = 200;
-    var mr = 10;
-    var w = $("#test").width();
-    var c = Math.floor((w - mr) / (iw + mr));
-    var iw_max = Math.floor((w - mr) / c) - mr;
-    var boxitem = $("#test").children();
-    for (var i = 0; i < boxitem.length; i++){
-        $(boxitem[i]).css({"width": iw_max+"px"});
-    }
+function gallery(_tr,_iw,_mr){
+    var target = _tr;
+    var box_item = $("#test").children();
+    var iw = _iw;
+    var mr = _mr;
+    var w, c, iw_max;
+
     var boxlist = new BoxList(mr);
+
     $(window).on('load resize', function(){
+        //サイズ設定
         w = $("#test").width();
         c = Math.floor((w - mr) / (iw + mr));
         iw_max = Math.floor((w - mr) / c) - mr;
-        $(boxitem[i]).css({"width": iw_max+"px"});
-        boxlist.init(w, iw_max, c);
-        for (var i = 0; i < boxitem.length; i++){
-            var h = $(boxitem[i]).height();
+        for (var i = 0; i < box_item.length; i++){
+            $(box_item[i]).css({"width": iw_max+"px"});
+        }
+        //初期化
+        boxlist.init(iw_max, c);
+        //整列
+        for (var i = 0; i < box_item.length; i++){
+            var h = $(box_item[i]).height();
             var p = boxlist.sort(h);
-            $(boxitem[i]).css({"top": p[1]+"px", "left": p[0]+"px", "width": iw_max+"px", "position": "absolute"});
+            $(box_item[i]).css({"top": p[1]+"px", "left": p[0]+"px", "width": iw_max+"px", "position": "absolute"});
         }
     });
-
-});
+}
