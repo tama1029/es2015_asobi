@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+img {max-width: 100%;}
+ul {list-style: none;}
+li {
+    transition-property:top,left;
+    transition-duration:0.1s;
+    transition-timing-function:ease-out;
+}
