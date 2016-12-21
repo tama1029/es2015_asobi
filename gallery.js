@@ -1,4 +1,36 @@
-class BoxList {
+class Gallery {
+
+    constructor(_target,_item_width,_margin) {
+        this._target = _target;
+        $(this._target).css({'position': 'relative'});
+        this._item_width = _item_width;
+        this._margin = _margin;
+        this._placement = new Placement(this._margin);
+    }
+
+    update() {
+        let box_item = $(this._target).children();
+        //サイズ設定
+        let w = $(this._target).width();
+        let c = Math.floor((w - this._margin) / (this._item_width + this._margin));
+        let maxw = Math.floor((w - this._margin) / c) - this._margin;
+        for (var i = 0; i < box_item.length; i++){
+            $(box_item[i]).css({'width': maxw+'px'});
+        }
+        //初期化
+        this._placement.init(maxw, c);
+        //整列
+        for (var i = 0; i < box_item.length; i++){
+            let h = $(box_item[i]).height();
+            let p = this._placement.sort(h);
+            $(box_item[i]).css({'top': p[1]+'px', 'left': p[0]+'px', 'width': maxw+'px', 'position': 'absolute'});
+        }
+        //大枠の高さを調節
+        $(this._target).css('height', this._placement.getHeight()+this._margin+'px');
+    }
+}
+
+class Placement {
 
     constructor(margin) {
         this._margin = margin;
@@ -48,38 +80,6 @@ class BoxList {
         } else {
             return 0;
         }
-    }
-}
-
-class Gallery {
-
-    constructor(_target,_item_width,_margin) {
-        this._target = _target;
-        $(this._target).css({'position': 'relative'});
-        this._item_width = _item_width;
-        this._margin = _margin;
-        this._boxlist = new BoxList(this._margin);
-    }
-
-    update() {
-        let box_item = $(this._target).children();
-        //サイズ設定
-        let w = $(this._target).width();
-        let c = Math.floor((w - this._margin) / (this._item_width + this._margin));
-        let maxw = Math.floor((w - this._margin) / c) - this._margin;
-        for (var i = 0; i < box_item.length; i++){
-            $(box_item[i]).css({'width': maxw+'px'});
-        }
-        //初期化
-        this._boxlist.init(maxw, c);
-        //整列
-        for (var i = 0; i < box_item.length; i++){
-            let h = $(box_item[i]).height();
-            let p = this._boxlist.sort(h);
-            $(box_item[i]).css({'top': p[1]+'px', 'left': p[0]+'px', 'width': maxw+'px', 'position': 'absolute'});
-        }
-        //大枠の高さを調節
-        $(this._target).css('height', this._boxlist.getHeight()+this._margin+'px');
     }
 }
 
