@@ -51,32 +51,50 @@ class BoxList {
     }
 }
 
-function gallery(_tr,_iw,_mr){
-    var target = _tr;
-    var box_item = $(_tr).children();
-    var iw = _iw;
-    var mr = _mr;
-    var w, c, iw_max;
+class Gallery {
 
-    var boxlist = new BoxList(mr);
+    constructor(_target,_item_width,_margin) {
+        this._target = _target;
+        $(this._target).css({'position': 'relative'});
+        this._item_width = _item_width;
+        this._margin = _margin;
+        this._boxlist = new BoxList(this._margin);
+    }
 
-    $(window).on('load resize', function(){
+    update() {
+        let box_item = $(this._target).children();
         //サイズ設定
-        w = $(_tr).width();
-        c = Math.floor((w - mr) / (iw + mr));
-        iw_max = Math.floor((w - mr) / c) - mr;
+        let w = $(this._target).width();
+        let c = Math.floor((w - this._margin) / (this._item_width + this._margin));
+        let maxw = Math.floor((w - this._margin) / c) - this._margin;
         for (var i = 0; i < box_item.length; i++){
-            $(box_item[i]).css({"width": iw_max+"px"});
+            $(box_item[i]).css({'width': maxw+'px'});
         }
         //初期化
-        boxlist.init(iw_max, c);
+        this._boxlist.init(maxw, c);
         //整列
         for (var i = 0; i < box_item.length; i++){
-            var h = $(box_item[i]).height();
-            var p = boxlist.sort(h);
-            $(box_item[i]).css({"top": p[1]+"px", "left": p[0]+"px", "width": iw_max+"px", "position": "absolute"});
+            let h = $(box_item[i]).height();
+            let p = this._boxlist.sort(h);
+            $(box_item[i]).css({'top': p[1]+'px', 'left': p[0]+'px', 'width': maxw+'px', 'position': 'absolute'});
         }
         //大枠の高さを調節
-        $(_tr).css("height", boxlist.getHeight()+mr+"px");
-    });
+        $(this._target).css('height', this._boxlist.getHeight()+this._margin+'px');
+    }
 }
+
+$(document).ready(function(){
+    //ulのid, 要素の幅, margin
+    var gal = new Gallery('#gallery', 200, 20);
+    gal.update();
+
+    $(window).on('resize', function(){
+        gal.update();
+    });
+
+    setInterval(function(){
+        $('#gallery').prepend($('#reserve li:first'));
+        $('#reserve').append($('#gallery li:last'));
+        gal.update();
+    },5000);
+});
