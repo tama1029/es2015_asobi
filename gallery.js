@@ -2,7 +2,6 @@ class Gallery {
 
     constructor(_target,_item_width,_margin) {
         this._target = _target;
-        $(this._target).css({'position': 'relative'});
         this._item_width = _item_width;
         this._margin = _margin;
         this._placement = new Placement(this._margin);
@@ -13,6 +12,9 @@ class Gallery {
         //サイズ設定
         let w = $(this._target).width();
         let c = Math.floor((w - this._margin) / (this._item_width + this._margin));
+        if (c <= 0) {
+            c = 1;
+        }
         let maxw = Math.floor((w - this._margin) / c) - this._margin;
         for (var i = 0; i < box_item.length; i++){
             $(box_item[i]).css({'width': maxw+'px'});
@@ -23,7 +25,7 @@ class Gallery {
         for (var i = 0; i < box_item.length; i++){
             let h = $(box_item[i]).height();
             let p = this._placement.sort(h);
-            $(box_item[i]).css({'top': p[1]+'px', 'left': p[0]+'px', 'width': maxw+'px', 'position': 'absolute'});
+            $(box_item[i]).css({'top': p[1]+'px', 'left': p[0]+'px', 'width': maxw+'px'});
         }
         //大枠の高さを調節
         $(this._target).css('height', this._placement.getHeight()+this._margin+'px');
@@ -83,18 +85,18 @@ class Placement {
     }
 }
 
-$(document).ready(function(){
-    //ulのid, 要素の幅, margin
-    var gal = new Gallery('#gallery', 200, 20);
+$(window).load(function() {
+    //要素,横幅（最低値）、margin
+    var gal = new Gallery('#gallery', 280, 20);
     gal.update();
 
-    $(window).on('resize', function(){
+    $(window).on('resize', function () {
         gal.update();
     });
 
-    setInterval(function(){
+    setInterval(function () {
         $('#gallery').prepend($('#reserve li:first'));
         $('#reserve').append($('#gallery li:last'));
         gal.update();
-    },5000);
+    }, 5000);
 });
